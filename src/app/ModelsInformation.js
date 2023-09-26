@@ -5,6 +5,9 @@ export default {
   data: function() {
     return {
       tableData: [],
+      show: {
+        note: true
+      }
     };
   },
   methods: {
@@ -30,6 +33,9 @@ export default {
       const keys = ["Organ", "Species", "Note", "Location",
         "Last modified","Blackfynn dataset", "Published", "Discover"];
       this.createTable(sheetRows, keys);
+    },
+    handleShowColumn: function (columnName) {
+      this.show[columnName] = !this.show[columnName]
     }
   }
 }

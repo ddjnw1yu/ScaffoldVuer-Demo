@@ -1,6 +1,18 @@
 <template>
   <div>
+    <div>
+      <el-button 
+        data-cy="showNote"
+        :icon="handleNoteIcon()"
+        size="mini"
+        @click="handleShowColumn('note')"
+      >
+        {{show.note ? "Hide" : "Show"}} Note
+      </el-button>
+    </div>
+    <br>
     <el-input
+      data-cy="searchInput"
       v-model="search"
       size="mini"
       placeholder="Type to search"
@@ -10,29 +22,35 @@
         data => !search || 
           data.Organ.toLowerCase().includes(search.toLowerCase()) ||
           data.Species.toLowerCase().includes(search.toLowerCase()) ||
-          data.Note.toLowerCase().includes(search.toLowerCase()))"
+          this.handleSearchInNote(data))"
       style="width: 100%;"
-      height="600"
+      max-height="600"
     >
       <el-table-column
         prop="Organ"
         label="Organ"
         width="100"
+        sortable
       />
       <el-table-column
         prop="Species"
         label="Species"
         width="100"
+        sortable
       />
       <el-table-column
+        data-cy="noteColumn"
         prop="Note"
         label="Note"
         width="200"
+        v-if="show.note"
       />
-      <el-table-column
+        <el-table-column
         prop="Last modified"
         label="Last modified"
         width="250"
+        sortable
+        :sort-method="handleSortByModifyTime"
       /> 
       <el-table-column
         fixed="right"
@@ -45,6 +63,12 @@
             @click="handleView(scope.row)"
           >
             View
+          </el-button>
+          <el-button
+            size="mini"
+            @click="handleDownload(scope.row)"
+          >
+            Download
           </el-button>
           <el-button
             v-if="scope.row.Discover !== 'Not even'"
@@ -96,12 +120,30 @@ export default {
     handleView: function(row) {
       this.$emit("viewModelClicked", row.Location);
     },
+    handleDownload: function(row) {
+      this.$emit("downloadModelClicked", row)
+    },
     handleDiscover: function(row) {
       window.open(row.Discover, "_blank");
     },
     handleBlackfynn: function(row) {
       window.open(row['Blackfynn dataset'], "_blank");
     },
+    handleNoteIcon: function () {
+      if (this.show.note) {
+        return "el-icon-notebook-2"
+      }
+      return "el-icon-notebook-1"
+    },
+    // Disable search in note when note column not show
+    handleSearchInNote: function (data) {
+      return this.show.note ? data.Note.toLowerCase().includes(this.search.toLowerCase()) : false
+    },
+    handleSortByModifyTime: function (a, b) {
+      const msecA = Date.parse(a["Last modified"]);
+      const msecB = Date.parse(b["Last modified"]);
+      return msecA - msecB
+    }
   }
 };
 </script>

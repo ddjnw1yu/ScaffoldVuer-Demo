@@ -11,7 +11,8 @@
     "lint": "vue-cli-service lint --ext .js,.vue src",
     "styleguide": "vue-cli-service styleguidist",
     "styleguide:build": "vue-cli-service styleguidist:build",
-    "changelog": "auto-changelog -p --output CHANGELOG.md --template keepachangelog"
+    "changelog": "auto-changelog -p --output CHANGELOG.md --template keepachangelog",
+    "cypress:open": "npx cypress open"
   },
   "files": [
     "dist/*",
@@ -26,6 +27,7 @@
     "axios": "^0.21.2",
     "core-js": "^3.22.5",
     "current-script-polyfill": "^1.0.0",
+    "cypress": "^12.11.0",
     "element-ui": "^2.13.0",
     "google-spreadsheet": "^3.1.15",
     "lodash": "^4.17.21",

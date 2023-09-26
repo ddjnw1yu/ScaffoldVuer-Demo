@@ -219,7 +219,7 @@
       popper-class="table-popover"
       :append-to-body="false"
     >
-      <ModelsTable @viewModelClicked="viewModelClicked" />
+      <ModelsTable @viewModelClicked="viewModelClicked" @downloadModelClicked="downloadModelClicked"/>
       <el-button slot="reference" icon="el-icon-folder-opened">
         Models
       </el-button>
@@ -459,6 +459,21 @@ export default {
         this.viewURL = "";
       }
     },
+    downloadModelClicked: function (info) {
+      // Create file-like object with raw data
+      const blob = new Blob([JSON.stringify(info, null, 4)], {
+        type: "application/json",
+      });
+      const url = window.URL.createObjectURL(blob);
+      // Use hyperlink tag attribute 'download' to implement download action
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = `${info.Species.toLowerCase()}_${info.Organ.toLowerCase()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
   },
 };
 </script>
